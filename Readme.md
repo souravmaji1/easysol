@@ -160,4 +160,53 @@ export default YourNextJSComponent;
 
 
 ```
+// Import form-data
+const FormData = await import('npm:form-data@4.0.0');
+const { Buffer } = await import("node:buffer")
 
+
+// Execute the API request (Promise)
+const requestOptions = {
+  url: 'https://imageapi-7xi5.onrender.com/process-image',
+  method: 'POST',
+  data: {
+    imageUrl: 'https://upload-selfie-image.s3.ap-southeast-1.amazonaws.com/image'
+  }
+}
+
+console.log('Request Options:', JSON.stringify(requestOptions, null, 2))
+
+const apiResponse = await Functions.makeHttpRequest(requestOptions)
+
+if (apiResponse.error) {
+  console.error('API Response Error:', apiResponse.error)
+  throw Error("Request failed")
+}
+
+console.log('API Response:', apiResponse)
+
+const { data } = apiResponse;
+
+console.log('Status:', apiResponse.statusCode)
+console.log('Response Data:', JSON.stringify(data.processedData, null, 2))
+
+// Return the response data
+return Functions.encodeString(JSON.stringify(data.processedData))
+
+
+const accountaddress = args[0]
+const apiKey = 'FJqYQ9wqR3zbz_PG';
+    const url = `https://api.shyft.to/sol/v1/transaction/history?network=devnet&account=${accountaddress}&enable_raw=true&tx_num=20`;
+    const apiResponse = await Functions.makeHttpRequest({
+        url: url,
+       headers: {
+            'x-api-key': apiKey
+        }
+    });
+    if (apiResponse.error) {
+        throw Error('Request failed');
+    }
+    const { data } = apiResponse;
+    console.log("api response",apiResponse)
+    const feePayers = data.result.map(tx => tx.fee_payer)
+    return Functions.encodeString(JSON.stringify(feePayers));
